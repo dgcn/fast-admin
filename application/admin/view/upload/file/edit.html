@@ -1,0 +1,45 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Module')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-module" class="form-control" name="row[module]" type="text" value="{$row.module|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Type_name')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-type_name" class="form-control" name="row[type_name]" type="text" value="{$row.type_name|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('File_name')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-file_name" class="form-control" name="row[file_name]" type="text" value="{$row.file_name|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Local_url')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <textarea id="c-local_url" class="form-control " rows="5" name="row[local_url]" cols="50">{$row.local_url|htmlentities}</textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Full_url')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <textarea id="c-full_url" class="form-control " rows="5" name="row[full_url]" cols="50">{$row.full_url|htmlentities}</textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Operator')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-operator" class="form-control" name="row[operator]" type="text" value="{$row.operator|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-primary btn-embossed disabled">{:__('OK')}</button>
+        </div>
+    </div>
+</form>

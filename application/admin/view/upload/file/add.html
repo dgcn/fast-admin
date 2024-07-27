@@ -1,41 +1,54 @@
 <form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
 
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Module')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">{:__('name')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-module" class="form-control" name="row[module]" type="text" value="">
+            <input id="c-file_name" class="form-control" data-rule="required"  name="row[name]" type="text" value="">
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Type_name')}:</label>
+        <label for="upload_classify_id" class="control-label col-xs-12 col-sm-2">{:__('File type')}</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-type_name" class="form-control" name="row[type_name]" type="text" value="">
+            <div >
+                <select name="row[upload_classify_id]" data-live-search="true"  data-rule="required"  id="upload_classify_id" class="form-control selectpicker">
+                    <option value="">{:__('Please select category')}</option>
+                    {foreach name="upload_classify_list" id="item"}
+                    <option value="{$item.id}">{$item.name}</option>
+                    {/foreach}
+                </select>
+            </div>
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('File_name')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">{:__('Status')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-file_name" class="form-control" name="row[file_name]" type="text" value="">
+            {:build_radios('row[status]', ['1'=>__('Normal'), '2'=>__('Hidden')])}
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Local_url')}:</label>
+        <label for="c-local_url" class="control-label col-xs-12 col-sm-2">文件:</label>
         <div class="col-xs-12 col-sm-8">
-            <textarea id="c-local_url" class="form-control " rows="5" name="row[local_url]" cols="50"></textarea>
+            <div class="input-group">
+                <input id="c-local_url" data-rule="required"  data-rule="" class="form-control" size="50" name="row[local_url]" type="text">
+                <div class="input-group-addon no-border no-padding">
+                    <span>
+                        <button type="button" id="faupload-avatar" class="btn btn-danger faupload"
+                                data-input-id="c-local_url" data-mimetype="xlsx,csv,xls" data-multiple="true"
+                                data-preview-id="p-avatar">
+                        <i class="fa fa-upload"></i> 上传
+                    </button>
+                    </span>
+                </div>
+            </div>
+            <ul class="row list-inline faupload-preview" id="p-avatar"></ul>
         </div>
     </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Full_url')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <textarea id="c-full_url" class="form-control " rows="5" name="row[full_url]" cols="50"></textarea>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Operator')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-operator" class="form-control" name="row[operator]" type="text" value="">
-        </div>
-    </div>
+    <!--    <div class="form-group">-->
+    <!--        <label class="control-label col-xs-12 col-sm-2">{:__('Full_url')}:</label>-->
+    <!--        <div class="col-xs-12 col-sm-8">-->
+    <!--            <textarea id="c-full_url" class="form-control " rows="5" name="row[full_url]" cols="50"></textarea>-->
+    <!--        </div>-->
+    <!--    </div>-->
     <div class="form-group layer-footer">
         <label class="control-label col-xs-12 col-sm-2"></label>
         <div class="col-xs-12 col-sm-8">
@@ -43,3 +56,11 @@
         </div>
     </div>
 </form>
+<script type="text/html" id="avatartpl">
+    <li class="col-xs-3">
+        <a href="<%=fullurl%>" data-url="<%=fullurl%>" target="_blank" class="thumbnail">
+            <img src="<%=fullurl%>" class="img-responsive">
+        </a>
+        <a href="javascript:;" class="btn btn-danger btn-xs btn-trash"><i class="fa fa-trash"></i></a>
+    </li>
+</script>

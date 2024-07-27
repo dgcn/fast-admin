@@ -8,28 +8,25 @@ use think\exception\PDOException;
 use think\exception\ValidateException;
 
 /**
- * 文件上传
+ * 文件分类
  *
  * @icon fa fa-circle-o
  */
-class File extends Backend
+class Classify extends Backend
 {
 
     /**
-     * File模型对象
-     * @var \app\admin\model\upload\File
+     * Classify模型对象
+     * @var \app\admin\model\upload\Classify
      */
     protected $model = null;
 
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = new \app\admin\model\upload\File;
+        $this->model = new \app\admin\model\upload\Classify;
 
-        $uploadClassify = Db::name('upload_classify')->select();
-        $this->view->assign("upload_classify_list", $uploadClassify);
     }
-
 
 
     /**
@@ -37,7 +34,6 @@ class File extends Backend
      * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
      * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
      */
-
     public function add()
     {
         if (false === $this->request->isPost()) {
@@ -47,13 +43,17 @@ class File extends Backend
         if (empty($params)) {
             $this->error(__('Parameter %s can not be empty', ''));
         }
+        $params = $this->preExcludeFields($params);
 
+        if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
+            $params[$this->dataLimitField] = $this->auth->id;
+        }
+
+        if (empty($params['type'])) $this->error(__('Parameter %s can not be empty', 'type'));
         if (empty($params['name'])) $this->error(__('Parameter %s can not be empty', 'name'));
-        if (empty($params['upload_classify_id'])) $this->error(__('Parameter %s can not be empty', 'File type'));
-        if (empty($params['local_url'])) $this->error(__('Parameter %s can not be empty', 'File'));
 
-        $count = Db::name('upload_classify')->where('id', $params['upload_classify_id'])->count();
-        if(!$count) $this->error(__('The file classify does not exist'));
+        $exitInfo = Db::name('upload_classify')->where('type', $params['type'])->find();
+        if ($exitInfo) $this->error(__('The type already exists'));
 
         $userinfo = $this->auth->getUserInfo();
         $operator = $userinfo['username'];
@@ -66,7 +66,6 @@ class File extends Backend
                 $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.add' : $name) : $this->modelValidate;
                 $this->model->validateFailException()->validate($validate);
             }
-            $params['full_url'] = config('app_base_api').$params['local_url'];
             $params['operator'] = $operator;
             $result = $this->model->allowField(true)->save($params);
             Db::commit();
@@ -98,12 +97,11 @@ class File extends Backend
         if (empty($params)) {
             $this->error(__('Parameter %s can not be empty', ''));
         }
+        if (empty($params['type'])) $this->error(__('Parameter %s can not be empty', 'type'));
         if (empty($params['name'])) $this->error(__('Parameter %s can not be empty', 'name'));
-        if (empty($params['upload_classify_id'])) $this->error(__('Parameter %s can not be empty', 'File type'));
-        if (empty($params['local_url'])) $this->error(__('Parameter %s can not be empty', 'File'));
 
-        $count = Db::name('upload_classify')->where('id', $params['upload_classify_id'])->count();
-        if(!$count) $this->error(__('The file classify does not exist'));
+        $exitInfo = Db::name('upload_classify')->where('type', $params['type'])->where('id', '!=', $row['id'])->find();
+        if ($exitInfo) $this->error(__('The type already exists'));
         $params = $this->preExcludeFields($params);
         $userinfo = $this->auth->getUserInfo();
         $operator = $userinfo['username'];
@@ -128,4 +126,5 @@ class File extends Backend
         }
         $this->success();
     }
+
 }

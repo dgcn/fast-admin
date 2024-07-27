@@ -5,13 +5,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // 初始化表格参数配置
             Table.api.init({
                 extend: {
-                    index_url: 'upload/file/index' + location.search,
-                    add_url: 'upload/file/add',
-                    edit_url: 'upload/file/edit',
-                    del_url: 'upload/file/del',
-                    multi_url: 'upload/file/multi',
-                    import_url: 'upload/file/import',
-                    table: 'upload_file',
+                    index_url: 'upload/classify/index' + location.search,
+                    add_url: 'upload/classify/add',
+                    edit_url: 'upload/classify/edit',
+                    del_url: 'upload/classify/del',
+                    multi_url: 'upload/classify/multi',
+                    import_url: 'upload/classify/import',
+                    table: 'upload_classify',
                 }
             });
 
@@ -26,9 +26,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
+                        {field: 'type', title: __('Type'), operate: 'LIKE'},
                         {field: 'name', title: __('Name'), operate: 'LIKE'},
-                        {field: 'upload_classify_id', title: __('Upload_classify_id'), operate: 'LIKE'},
-                        {field: 'status', title: __('status'), searchList:{"1": __('Normal'), '2': __('Hidden')}, formatter: Table.api.formatter.status},
                         {field: 'operator', title: __('Operator'), operate: 'LIKE'},
                         {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},
                         {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},

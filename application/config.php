@@ -17,6 +17,7 @@ return [
     // +----------------------------------------------------------------------
     // 应用命名空间
     'app_namespace'          => 'app',
+    'app_base_api'          => Env::get('app.base_api', 'http://localhost'),
     // 应用调试模式
     'app_debug'              => Env::get('app.debug', false),
     // 应用Trace

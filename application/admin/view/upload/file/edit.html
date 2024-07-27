@@ -1,39 +1,47 @@
 <form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
 
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Module')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">{:__('name')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-module" class="form-control" name="row[module]" type="text" value="{$row.module|htmlentities}">
+            <input id="c-name" class="form-control" data-rule="required"  name="row[name]"  value="{$row.name|htmlentities}" type="text">
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Type_name')}:</label>
+        <label for="upload_classify_id" class="control-label col-xs-12 col-sm-2">{:__('File type')}</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-type_name" class="form-control" name="row[type_name]" type="text" value="{$row.type_name|htmlentities}">
+            <div >
+                <select name="row[upload_classify_id]" data-live-search="true"  data-rule="required"  id="upload_classify_id" class="form-control selectpicker">
+                    <option value="">{:__('Please select category')}</option>
+                    {foreach name="upload_classify_list" id="item"}
+                    <option value="{$item.id}" {if $item.id==$row.upload_classify_id}selected{/if}>{$item.name}</option>
+                    {/foreach}
+                </select>
+            </div>
+        </div>
+    </div>
+    {$row.upload_classify_id}
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Status')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            {:build_radios('row[status]', ['1'=>__('Normal'), '2'=>__('Hidden')], $row.status)}
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('File_name')}:</label>
+        <label for="c-local_url" class="control-label col-xs-12 col-sm-2">文件:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-file_name" class="form-control" name="row[file_name]" type="text" value="{$row.file_name|htmlentities}">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Local_url')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <textarea id="c-local_url" class="form-control " rows="5" name="row[local_url]" cols="50">{$row.local_url|htmlentities}</textarea>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Full_url')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <textarea id="c-full_url" class="form-control " rows="5" name="row[full_url]" cols="50">{$row.full_url|htmlentities}</textarea>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Operator')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-operator" class="form-control" name="row[operator]" type="text" value="{$row.operator|htmlentities}">
+            <div class="input-group">
+                <input id="c-local_url" data-rule="required"  data-rule="" class="form-control" size="50" name="row[local_url]" value="{$row.local_url|htmlentities}" type="text">
+                <div class="input-group-addon no-border no-padding">
+                    <span>
+                        <button type="button" id="faupload-avatar" class="btn btn-danger faupload"
+                                data-input-id="c-local_url" data-mimetype="xlsx,csv,xls" data-multiple="true"
+                                data-preview-id="p-avatar">
+                        <i class="fa fa-upload"></i> 上传
+                    </button>
+                    </span>
+                </div>
+            </div>
+            <ul class="row list-inline faupload-preview" id="p-avatar"></ul>
         </div>
     </div>
     <div class="form-group layer-footer">

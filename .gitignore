@@ -16,3 +16,5 @@ composer.lock
 .vscode
 #node_modules
 .user.ini
+/public/nginx.htaccess
+/public/.htaccess

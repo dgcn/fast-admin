@@ -507,3 +507,11 @@ EOT;
         return $icon;
     }
 }
+
+if(!function_exists('get_file_full_name')) {
+    function get_file_full_name($url)
+    {
+
+        return config('app_base_api').$url;
+    }
+}

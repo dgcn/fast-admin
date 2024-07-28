@@ -6,7 +6,7 @@ return [
     'Upload_classify_id' => '分类名称',
     'name' => '名称',
     'Local_url' => '本地地址',
-    'Full_url' => '全地址',
+    'File_info_json' => '文件信息',
     'status' => '状态',
     'Operator' => '操作人',
     'Createtime' => '创建时间',
@@ -16,7 +16,6 @@ return [
     'upload' => '上传',
     'File' => '文件',
     'The file classify does not exist' => '文件类型不存在',
-    'Show'=>'开启',
-    'Hidden'=>'关闭',
-    'Status'=>'状态'
+    'Status'=>'状态',
+    'The file edit failed' => '文件编辑失败',
 ];

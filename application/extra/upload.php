@@ -1,5 +1,7 @@
 <?php
 
+$saveKey = \app\service\upload\FileService::UPLOAD_PREFIX;
+$saveKey = "/uploads/{year}{mon}{day}/{random}{$saveKey}{filename}";
 //上传配置
 return [
     /**
@@ -13,7 +15,7 @@ return [
     /**
      * 文件保存格式
      */
-    'savekey'   => '/uploads/{year}{mon}{day}/{filemd5}{.suffix}',
+    'savekey'   => $saveKey,
     /**
      * 最大可上传大小
      */

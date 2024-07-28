@@ -26,8 +26,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
-                        {field: 'type', title: __('Type'), operate: 'LIKE'},
+                        {field: 'type', title: __('Type')},
                         {field: 'name', title: __('Name'), operate: 'LIKE'},
+                        {field: 'status', title: __('status'), searchList:{"1": __('Normal'), '2': __('Hidden')}, formatter: Table.api.formatter.status},
                         {field: 'operator', title: __('Operator'), operate: 'LIKE'},
                         {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},
                         {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},

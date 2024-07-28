@@ -3,10 +3,10 @@
 namespace app\admin\controller\upload;
 
 use app\common\controller\Backend;
+use app\service\upload\ClassifyService;
+use app\service\upload\FileService;
 use think\Db;
 use think\exception\PDOException;
-use think\exception\ValidateException;
-
 /**
  * 文件上传
  *
@@ -26,10 +26,35 @@ class File extends Backend
         parent::_initialize();
         $this->model = new \app\admin\model\upload\File;
 
-        $uploadClassify = Db::name('upload_classify')->select();
-        $this->view->assign("upload_classify_list", $uploadClassify);
+        $uploadClassify = new ClassifyService();
+        $this->view->assign("upload_classify_list", $uploadClassify->list([])['list']);
     }
 
+    public function index()
+    {
+        //设置过滤方法
+        $this->request->filter(['strip_tags', 'trim']);
+        if (false === $this->request->isAjax()) {
+            return $this->view->fetch();
+        }
+        //如果发送的来源是 Selectpage，则转发到 Selectpage
+        if ($this->request->request('keyField')) {
+            return $this->selectpage();
+        }
+        [$where, $sort, $order, $offset, $limit] = $this->buildparams();
+        $list = $this->model
+            ->where($where)
+            ->order($sort, $order)
+            ->paginate($limit);
+        foreach ($list as $k => &$v) {
+            $v['upload_classify_name'] = Db::name('upload_classify')->where('id', $v['upload_classify_id'])->value('name');
+
+            $v['file_info_json'] = json_decode($v['file_info_json'], JSON_UNESCAPED_UNICODE);
+        }
+
+        $result = ['total' => $list->total(), 'rows' => $list->items()];
+        return json($result);
+    }
 
 
     /**
@@ -48,34 +73,20 @@ class File extends Backend
             $this->error(__('Parameter %s can not be empty', ''));
         }
 
-        if (empty($params['name'])) $this->error(__('Parameter %s can not be empty', 'name'));
         if (empty($params['upload_classify_id'])) $this->error(__('Parameter %s can not be empty', 'File type'));
         if (empty($params['local_url'])) $this->error(__('Parameter %s can not be empty', 'File'));
 
         $count = Db::name('upload_classify')->where('id', $params['upload_classify_id'])->count();
-        if(!$count) $this->error(__('The file classify does not exist'));
+        if (!$count) $this->error(__('The file classify does not exist'));
 
         $userinfo = $this->auth->getUserInfo();
         $operator = $userinfo['username'];
-        $result = false;
-        Db::startTrans();
+        $params['operator'] = $operator;
         try {
-            //是否采用模型验证
-            if ($this->modelValidate) {
-                $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
-                $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.add' : $name) : $this->modelValidate;
-                $this->model->validateFailException()->validate($validate);
-            }
-            $params['full_url'] = config('app_base_api').$params['local_url'];
-            $params['operator'] = $operator;
-            $result = $this->model->allowField(true)->save($params);
-            Db::commit();
-        } catch (ValidateException|PDOException|Exception $e) {
-            Db::rollback();
+            $fileService = new FileService();
+            $fileService->add($params);
+        } catch (\Exception $e) {
             $this->error($e->getMessage());
-        }
-        if ($result === false) {
-            $this->error(__('No rows were inserted'));
         }
         $this->success();
     }
@@ -98,34 +109,49 @@ class File extends Backend
         if (empty($params)) {
             $this->error(__('Parameter %s can not be empty', ''));
         }
-        if (empty($params['name'])) $this->error(__('Parameter %s can not be empty', 'name'));
-        if (empty($params['upload_classify_id'])) $this->error(__('Parameter %s can not be empty', 'File type'));
-        if (empty($params['local_url'])) $this->error(__('Parameter %s can not be empty', 'File'));
-
-        $count = Db::name('upload_classify')->where('id', $params['upload_classify_id'])->count();
-        if(!$count) $this->error(__('The file classify does not exist'));
-        $params = $this->preExcludeFields($params);
         $userinfo = $this->auth->getUserInfo();
         $operator = $userinfo['username'];
-        $result = false;
+        $params['operator'] = $operator;
+        try {
+            $fileService = new FileService();
+            $params['id'] = $row->id;
+            $fileService->edit($params);
+        } catch (\Exception $exception) {
+            $this->error($exception->getMessage());
+        }
+        $this->success();
+    }
+
+    public function del($ids = null)
+    {
+        if (false === $this->request->isPost()) {
+            $this->error(__("Invalid parameters"));
+        }
+        $ids = $ids ?: $this->request->post("ids");
+        if (empty($ids)) {
+            $this->error(__('Parameter %s can not be empty', 'ids'));
+        }
+        $pk = $this->model->getPk();
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds)) {
+            $this->model->where($this->dataLimitField, 'in', $adminIds);
+        }
+        $list = $this->model->where($pk, 'in', $ids)->select();
+
+        $count = 0;
         Db::startTrans();
         try {
-            //是否采用模型验证
-            if ($this->modelValidate) {
-                $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
-                $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : $name) : $this->modelValidate;
-                $row->validateFailException()->validate($validate);
+            foreach ($list as $item) {
+                $count += $item->delete();
             }
-            $params['operator'] = $operator;
-            $result = $row->allowField(true)->save($params);
             Db::commit();
-        } catch (ValidateException|PDOException|Exception $e) {
+        } catch (PDOException|Exception $e) {
             Db::rollback();
             $this->error($e->getMessage());
         }
-        if (false === $result) {
-            $this->error(__('No rows were updated'));
+        if ($count) {
+            $this->success();
         }
-        $this->success();
+        $this->error(__('No rows were deleted'));
     }
 }

@@ -85,10 +85,6 @@ class Classify extends Backend
         if (!$row) {
             $this->error(__('No Results were found'));
         }
-        $adminIds = $this->getDataLimitAdminIds();
-        if (is_array($adminIds) && !in_array($row[$this->dataLimitField], $adminIds)) {
-            $this->error(__('You have no permission'));
-        }
         if (false === $this->request->isPost()) {
             $this->view->assign('row', $row);
             return $this->view->fetch();
@@ -97,12 +93,8 @@ class Classify extends Backend
         if (empty($params)) {
             $this->error(__('Parameter %s can not be empty', ''));
         }
-        if (empty($params['type'])) $this->error(__('Parameter %s can not be empty', 'type'));
         if (empty($params['name'])) $this->error(__('Parameter %s can not be empty', 'name'));
 
-        $exitInfo = Db::name('upload_classify')->where('type', $params['type'])->where('id', '!=', $row['id'])->find();
-        if ($exitInfo) $this->error(__('The type already exists'));
-        $params = $this->preExcludeFields($params);
         $userinfo = $this->auth->getUserInfo();
         $operator = $userinfo['username'];
         $result = false;

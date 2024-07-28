@@ -49,4 +49,15 @@ class Upload extends Api
 
         $this->success(__('Operation successful'), $list);
     }
+
+    public function getInfo(){
+        $id = $this->request->get('id');
+        if (empty($id)) $this->error(__('Parameter exception'));
+        $info = Db::name('upload_file')->where('id', $id)->find();
+        $info['file_info_json'] = json_decode($info['file_info_json'], JSON_UNESCAPED_UNICODE);
+        $info['upload_classify_name'] = Db::name('upload_classify')->where('id', $info['upload_classify_id'])->value('name');
+        $info['createtime'] = date('Y-m-d H:i:s', $info['createtime']);
+        $info['updatetime'] = date('Y-m-d H:i:s', $info['updatetime']);
+        $this->success(__('Operation successful'), $info);
+    }
 }

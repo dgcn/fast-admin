@@ -42,11 +42,13 @@ class Upload extends Api
         $list = Db::name('upload_file')->where($where)->select();
 
         foreach ($list as $key => &$item) {
+            $createtime = $item['createtime'];
+            $updatetime = $item['updatetime'];
             $item['file_info_json'] = json_decode($item['file_info_json'], JSON_UNESCAPED_UNICODE);
-            $item['createtime'] = date('Y-m-d H:i:s', $item['createtime']);
-            $item['updatetime'] = date('Y-m-d H:i:s', $item['updatetime']);
-            $item['create_date'] = date('Y-m-d', $item['createtime']);
-            $item['update_date'] = date('Y-m-d', $item['updatetime']);
+            $item['createtime'] = date('Y-m-d H:i:s', $createtime);
+            $item['updatetime'] = date('Y-m-d H:i:s', $updatetime);
+            $item['create_date'] = date('Y-m-d', $createtime);
+            $item['update_date'] = date('Y-m-d', $updatetime);
         }
 
         $this->success(__('Operation successful'), array(

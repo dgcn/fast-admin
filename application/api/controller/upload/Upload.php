@@ -47,7 +47,9 @@ class Upload extends Api
             $item['updatetime'] = date('Y-m-d H:i:s', $item['updatetime']);
         }
 
-        $this->success(__('Operation successful'), $list);
+        $this->success(__('Operation successful'), array(
+            'list'=> $list
+        ));
     }
 
     public function getInfo(){

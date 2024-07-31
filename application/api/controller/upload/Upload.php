@@ -45,6 +45,8 @@ class Upload extends Api
             $item['file_info_json'] = json_decode($item['file_info_json'], JSON_UNESCAPED_UNICODE);
             $item['createtime'] = date('Y-m-d H:i:s', $item['createtime']);
             $item['updatetime'] = date('Y-m-d H:i:s', $item['updatetime']);
+            $item['create_date'] = date('Y-m-d', $item['createtime']);
+            $item['update_date'] = date('Y-m-d', $item['updatetime']);
         }
 
         $this->success(__('Operation successful'), array(

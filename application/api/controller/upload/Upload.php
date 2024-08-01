@@ -59,11 +59,17 @@ class Upload extends Api
     public function getInfo(){
         $id = $this->request->get('id');
         if (empty($id)) $this->error(__('Parameter exception'));
-        $info = Db::name('upload_file')->where('id', $id)->find();
+        $info = db('upload_file')->where('id',1)->find();
+        if (!$info)  $this->error(__('Parameter exception'));
+        if ($info['status'] != 1)  $this->error(__('Status exception'));
         $info['file_info_json'] = json_decode($info['file_info_json'], JSON_UNESCAPED_UNICODE);
         $info['upload_classify_name'] = Db::name('upload_classify')->where('id', $info['upload_classify_id'])->value('name');
-        $info['createtime'] = date('Y-m-d H:i:s', $info['createtime']);
-        $info['updatetime'] = date('Y-m-d H:i:s', $info['updatetime']);
+        $createtime = $info['createtime'];
+        $updatetime = $info['updatetime'];
+        $info['createtime'] = date('Y-m-d H:i:s', $createtime);
+        $info['updatetime'] = date('Y-m-d H:i:s', $updatetime);
+        $info['create_date'] = date('Y-m-d', $createtime);
+        $info['update_date'] = date('Y-m-d', $updatetime);
         $this->success(__('Operation successful'), $info);
     }
 }

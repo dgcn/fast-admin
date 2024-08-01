@@ -59,7 +59,7 @@ class Upload extends Api
     public function getInfo(){
         $id = $this->request->get('id');
         if (empty($id)) $this->error(__('Parameter exception'));
-        $info = db('upload_file')->where('id',1)->find();
+        $info = db('upload_file')->where('id', $id)->find();
         if (!$info)  $this->error(__('Parameter exception'));
         if ($info['status'] != 1)  $this->error(__('Status exception'));
         $info['file_info_json'] = json_decode($info['file_info_json'], JSON_UNESCAPED_UNICODE);

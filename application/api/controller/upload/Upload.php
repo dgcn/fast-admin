@@ -64,7 +64,13 @@ class Upload extends Api
         if ($info['status'] != 1)  $this->error(__('Status exception'));
         $info['file_info_json'] = json_decode($info['file_info_json'], JSON_UNESCAPED_UNICODE);
         $info['upload_classify_name'] = Db::name('upload_classify')->where('id', $info['upload_classify_id'])->value('name');
-        $info['file_size'] = filesize(config('app_base_api').$info['local_url']);
+        $info['file_info_json']['size'] = 0;
+        $filePath = ROOT_PATH.'public'.$info['local_url'];
+        if (file_exists($filePath)) {
+            // 获取文件大小
+            $info['file_info_json']['size'] = filesize($filePath);
+        }
+        $info['file_size'] = filesize();
         $createtime = $info['createtime'];
         $updatetime = $info['updatetime'];
         $info['createtime'] = date('Y-m-d H:i:s', $createtime);
@@ -93,7 +99,7 @@ class Upload extends Api
         $this->success(__('Operation successful'));
     }
 
-    public function addRead()
+    public function add_read()
     {
         $id = $this->request->get('id');
         if (empty($id)) $this->error(__('Parameter exception'));

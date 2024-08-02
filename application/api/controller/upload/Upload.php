@@ -64,8 +64,7 @@ class Upload extends Api
         if ($info['status'] != 1)  $this->error(__('Status exception'));
         $info['file_info_json'] = json_decode($info['file_info_json'], JSON_UNESCAPED_UNICODE);
         $info['upload_classify_name'] = Db::name('upload_classify')->where('id', $info['upload_classify_id'])->value('name');
-        $info['file_size'] = filesize($info['local_url']);
-
+        $info['file_size'] = filesize(config('app_base_api').$info['local_url']);
         $createtime = $info['createtime'];
         $updatetime = $info['updatetime'];
         $info['createtime'] = date('Y-m-d H:i:s', $createtime);

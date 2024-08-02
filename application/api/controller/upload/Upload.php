@@ -81,11 +81,11 @@ class Upload extends Api
         $info = db('upload_file')->where('id', $id)->find();
         if (!$info)  $this->error(__('Parameter exception'));
 
-        if ($info['status'] = 1) {
+        if ($status == 1) {
             Db::name('upload_file')->where('id', $id)->setInc('collect_count');
         }
 
-        if ($info['status'] = 2 && $info['collect_count'] > 0) {
+        if ($status == 2 && $info['collect_count'] > 0) {
             Db::name('upload_file')->where('id', $id)->setDec('collect_count');
         }
 

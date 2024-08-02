@@ -70,7 +70,6 @@ class Upload extends Api
             // 获取文件大小
             $info['file_info_json']['size'] = filesize($filePath);
         }
-        $info['file_size'] = filesize();
         $createtime = $info['createtime'];
         $updatetime = $info['updatetime'];
         $info['createtime'] = date('Y-m-d H:i:s', $createtime);

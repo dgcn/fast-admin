@@ -64,6 +64,8 @@ class Upload extends Api
         if ($info['status'] != 1)  $this->error(__('Status exception'));
         $info['file_info_json'] = json_decode($info['file_info_json'], JSON_UNESCAPED_UNICODE);
         $info['upload_classify_name'] = Db::name('upload_classify')->where('id', $info['upload_classify_id'])->value('name');
+        $info['file_size'] = filesize($info['local_url']);
+
         $createtime = $info['createtime'];
         $updatetime = $info['updatetime'];
         $info['createtime'] = date('Y-m-d H:i:s', $createtime);
@@ -77,7 +79,7 @@ class Upload extends Api
     {
         $id = $this->request->get('id');
         $status = $this->request->get('status');
-        if (empty($id)) $this->error(__('Parameter exception'));
+        if (empty($id) || empty($status)) $this->error(__('Parameter exception'));
         $info = db('upload_file')->where('id', $id)->find();
         if (!$info)  $this->error(__('Parameter exception'));
 
@@ -89,6 +91,17 @@ class Upload extends Api
             Db::name('upload_file')->where('id', $id)->setDec('collect_count');
         }
 
+        $this->success(__('Operation successful'));
+    }
+
+    public function addRead()
+    {
+        $id = $this->request->get('id');
+        if (empty($id)) $this->error(__('Parameter exception'));
+        $info = db('upload_file')->where('id', $id)->find();
+        if (!$info)  $this->error(__('Parameter exception'));
+
+        Db::name('upload_file')->where('id', $id)->setInc('read_count');
         $this->success(__('Operation successful'));
     }
 }

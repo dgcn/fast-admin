@@ -72,4 +72,23 @@ class Upload extends Api
         $info['update_date'] = date('Y-m-d', $updatetime);
         $this->success(__('Operation successful'), $info);
     }
+
+    public function collect()
+    {
+        $id = $this->request->get('id');
+        $status = $this->request->get('status');
+        if (empty($id)) $this->error(__('Parameter exception'));
+        $info = db('upload_file')->where('id', $id)->find();
+        if (!$info)  $this->error(__('Parameter exception'));
+
+        if ($info['status'] = 1) {
+            Db::name('upload_file')->where('id', $id)->setInc('collect_count');
+        }
+
+        if ($info['status'] = 2 && $info['collect_count'] > 0) {
+            Db::name('upload_file')->where('id', $id)->setDec('collect_count');
+        }
+
+        $this->success(__('Operation successful'));
+    }
 }

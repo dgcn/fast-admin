@@ -68,7 +68,7 @@ class Upload extends Api
         $filePath = ROOT_PATH.'public'.$info['local_url'];
         if (file_exists($filePath)) {
             // 获取文件大小
-            $info['file_info_json']['size'] = filesize($filePath);
+            $info['file_info_json']['size'] = round(filesize($filePath)  / 1024, 2);
         }
         $createtime = $info['createtime'];
         $updatetime = $info['updatetime'];

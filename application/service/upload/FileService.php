@@ -20,8 +20,6 @@ class FileService
         if (!$count) throw new Exception(__('The file classify does not exist'));
         $isExistName = true;
         if (empty($params['name'])) $isExistName = false;
-
-
         Db::startTrans();
         try {
             foreach (explode(',', $params['local_url']) as $key => $url) {
@@ -62,6 +60,8 @@ class FileService
         }
         if (!empty($updateData['operator'])) $updateData['operator'] = $params['operator'];
         $updateData['updatetime'] = time();
+        $updateData['collect_count'] = $params['collect_count'];
+        $updateData['read_count'] = $params['read_count'];
         $res = Db::name('upload_file')->where('id', $params['id'])->update($updateData);
         if (false === $res) throw new Exception(__('The file edit failed'));
     }

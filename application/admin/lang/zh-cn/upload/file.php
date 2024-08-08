@@ -6,6 +6,8 @@ return [
     'Upload_classify_id' => '分类名称',
     'name' => '名称',
     'Local_url' => '本地地址',
+    'collect_count' => '收藏数量',
+    'read_count' => '下载数量',
     'File_info_json' => '文件信息',
     'status' => '状态',
     'Operator' => '操作人',

@@ -2,8 +2,10 @@
 
 namespace app\api\controller\upload;
 
+use app\admin\controller\upload\File;
 use app\api\middleware\AuthMiddleware;
 use app\common\controller\Api;
+use app\service\upload\FileService;
 use think\Db;
 
 /**
@@ -62,7 +64,8 @@ class Upload extends Api
         $info = db('upload_file')->where('id', $id)->find();
         if (!$info)  $this->error(__('Parameter exception'));
         if ($info['status'] != 1)  $this->error(__('Status exception'));
-        $info['file_info_json'] = json_decode($info['file_info_json'], JSON_UNESCAPED_UNICODE);
+        $fileInfo = (new FileService())->getFileInfo([$info['local_url']])[0];
+        $info['file_info_json'] = json_decode($fileInfo, JSON_UNESCAPED_UNICODE);
         $info['upload_classify_name'] = Db::name('upload_classify')->where('id', $info['upload_classify_id'])->value('name');
         $info['file_info_json']['size'] = 0;
         $filePath = ROOT_PATH.'public'.$info['local_url'];

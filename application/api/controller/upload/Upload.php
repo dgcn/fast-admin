@@ -116,6 +116,6 @@ class Upload extends Api
     {
         $err = $this->request->post('err');
         Db::name('export_file_err')->insert(['err' => $err]);
-
+        $this->success(__('操作成功'));
     }
 }

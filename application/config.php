@@ -17,7 +17,7 @@ return [
     // +----------------------------------------------------------------------
     // 应用命名空间
     'app_namespace' => 'app',
-    'app_base_api' => Env::get('app.base_api', 'http://localhost'),
+    'app_base_api' => Env::get('app.base_api', 'https://www.gdshangan.cn'),
     'api_key' => Env::get('app.api_key', '77a22aec393574d6328b9c066b7c9b5b'),
     // 应用调试模式
     'app_debug' => Env::get('app.debug', false),

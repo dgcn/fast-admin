@@ -36,11 +36,16 @@ class Upload extends Api
         $uploadClassifyId = !empty($params['upload_classify_id']) ? $params['upload_classify_id'] : -1;
         $status = !empty($params['status']) ? $params['status'] : -1;
         $name =!empty( $params['name']) ? $params['name'] : '';
+        $ids = !empty($params['ids']) ? $params['ids'] : '';
         $where = [];
         if ($status != -1) $where['status'] = $status;
         if ($uploadClassifyId!= -1) $where['upload_classify_id'] = $uploadClassifyId;
         if ($name) $where['name'] = ['like', '%'.$name.'%'];
-
+        if (!empty($ids)) {
+            $ids =  str_replace('，', ',', $ids);
+            $ids = explode(',', $ids);
+            $where['id'] = ['in', $ids];
+        }
         $list = Db::name('upload_file')->where($where)->select();
 
         foreach ($list as $key => &$item) {

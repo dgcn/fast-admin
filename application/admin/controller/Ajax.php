@@ -62,7 +62,6 @@ class Ajax extends Backend
 
         //必须还原upload配置,否则分片及cdnurl函数计算错误
         Config::load(APP_PATH . 'extra/upload.php', 'upload');
-
         $chunkid = $this->request->post("chunkid");
         if ($chunkid) {
             if (!Config::get('upload.chunking')) {

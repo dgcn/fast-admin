@@ -46,6 +46,7 @@ class Upload extends Api
             $ids = explode(',', $ids);
             $where['id'] = ['in', $ids];
         }
+//	var_dump($where);exit;
         $list = Db::name('upload_file')->where($where)->select();
 
         foreach ($list as $key => &$item) {

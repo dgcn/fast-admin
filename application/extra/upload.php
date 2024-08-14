@@ -1,7 +1,7 @@
 <?php
 
 $saveKey = \app\service\upload\FileService::UPLOAD_PREFIX;
-$saveKey = "/uploads/{year}{mon}{day}/{$saveKey}{filename}";
+$saveKey = "/uploads/{year}{mon}{day}/{random}{$saveKey}{filename}";
 //上传配置
 return [
     /**

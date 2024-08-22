@@ -44,7 +44,8 @@ class File extends Backend
         [$where, $sort, $order, $offset, $limit] = $this->buildparams();
         $list = $this->model
             ->where($where)
-            ->order($sort, $order)
+//            ->order($sort, $order)
+            ->order('createtime', 'desc')
             ->paginate($limit);
         foreach ($list as $k => &$v) {
             $v['upload_classify_name'] = Db::name('upload_classify')->where('id', $v['upload_classify_id'])->value('name');

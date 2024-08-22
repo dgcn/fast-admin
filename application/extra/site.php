@@ -37,7 +37,7 @@ return array (
   'mail_from' => '',
   'attachmentcategory' => 
   array (
-    'is_audit' => '1',
+    'is_audit2323' => '1',
   ),
-  'is_aduit' => '1',
+  'is_audit' => '1',
 );

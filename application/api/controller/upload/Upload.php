@@ -56,7 +56,7 @@ class Upload extends Api
             $where['id'] = ['in', $ids];
         }
 
-        $list = Db::name('upload_file')->where($where)->select();
+        $list = Db::name('upload_file')->where($where)->order('createtime', 'desc')->select();
 
         foreach ($list as $key => &$item) {
             $createtime = $item['createtime'];
